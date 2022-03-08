@@ -1,5 +1,3 @@
-# log2
-
 ## What?
 
 Calculates $$log_2$$ of an unsigned 32 bit integer value with 16bit fraction outputs. (*Q16 format*)
@@ -87,7 +85,8 @@ int32_t log2_fast(uint32_t x)
 
 ## Licence
 
-```// ----------------------------------------------------------------------------
+```
+// ----------------------------------------------------------------------------
 // MIT License
 // 
 // Copyright (c) 2022 <ihsan@kehribar.me>

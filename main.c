@@ -61,13 +61,13 @@ static inline int32_t log2_fast_interp(const uint32_t x)
   // ...  
   uint32_t xlz = __builtin_clz(x);
   uint32_t xbits = 31 - xlz;
-  uint32_t remainder = x & ~(1 << xbits);
-  uint32_t remainder_big = remainder << xlz;
+  uint32_t xremainder = x & ~(1 << xbits);
+  uint32_t xremainder_big = xremainder << xlz;
   
   // ...
   uint32_t result = 0;
   result += (xbits << 16);
-  result += lutRead_interp(remainder_big);
+  result += lutRead_interp(xremainder_big);
   return result;  
 }
 
@@ -77,13 +77,13 @@ static inline int32_t log2_fast(const uint32_t x)
   // ...  
   uint32_t xlz = __builtin_clz(x);
   uint32_t xbits = 31 - xlz;
-  uint32_t remainder = x & ~(1 << xbits);
-  uint32_t remainder_big = remainder << xlz;
+  uint32_t xremainder = x & ~(1 << xbits);
+  uint32_t xremainder_big = xremainder << xlz;
 
   // ...
   uint32_t result = 0;
   result += (xbits << 16);
-  result += lutRead(remainder_big);
+  result += lutRead(xremainder_big);
   return result;  
 }
 
@@ -98,6 +98,7 @@ int main()
   FILE* fp = fopen("./doc/results.txt", "w+");
 
   // ...
+  printf("\r\n");
   printf("Running ...\r\n");
 
   // ...
@@ -120,7 +121,7 @@ int main()
     }
 
     // ...
-    if((x % 100) == 0)
+    if((x % 1000) == 0)
     {
       fprintf(fp, "%d,%d,%d,%d\r\n", 
         x, log2_fast(x), log2_fast_interp(x), log2_reference(x)

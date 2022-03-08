@@ -1,13 +1,13 @@
 ## What?
 
-Calculates $$log_2$$ of an unsigned 32 bit integer value with 16bit fraction outputs. (*Q16 format*)
+Calculates log<sub>2</sub> of an unsigned 32 bit integer value with 16bit fraction outputs. (*Q16 format*)
 
-This algorithm doesn't use any division, loop or branch instructions which makes it fast and constant run time. However, this algorithm heavily relies on $$CLZ$$ instruction commonly found on desktop / laptop / mobile grade CPUs and ARM Cortex M3, M4, M7 cores.
+This algorithm doesn't use any division, loop or branch instructions which makes it fast and constant run time. However, this algorithm heavily relies on CLZ instruction commonly found on desktop / laptop / mobile grade CPUs and ARM Cortex M3, M4, M7 cores.
 
 ## Input / Output range
 
-* Input must be greater than $$0$$ and must be smaller than $$(2^{32} - 1)$$
-* Output is between $$0$$ and $$((32 * 65536) - 1)$$
+* Input must be greater than 0 and must be smaller than (2<sup>32</sup> - 1)
+* Output is between 0 and ((32 * 65536) - 1)
 
 ## Reference Implementation
 
@@ -22,17 +22,17 @@ int32_t log2_reference(uint32_t x)
 
 We are using the following logarithmic identity:
 
-$$log_2(a+b) = \log_2(a) + log_2(1+\frac{b}{a})$$
+![](./doc/img0.png)
 
-Based on this identiy, we seperate the input value $$x$$ into $$a$$ and $$b$$ values where 
+Based on this identiy, we seperate the input value x into a and b values where 
 
-* $$a$$ holds the highest $$2^N$$ value smaller or equal to $$x$$
-* $$b$$ is ($$x$$ - $$a$$)
+* a holds the highest 2<sup>N</sup> value smaller or equal to x
+* b is (x - a)
 
 After this part, 
 
-* $$log_2(a)$$ can be calculated as $$N$$ directly 
-* A lookup table can be used for calculating the $$log_2(1+\frac{b}{a})$$ part
+* log<sub>2</sub>(a) can be calculated as N directly 
+* A lookup table can be used for calculating the rest
 
 ## Why CLZ is useful?
 
@@ -42,13 +42,11 @@ Given the following 32-bit number:
 
 	0000 0000 0001 0001 1010 0100 0000 1000
 
-... $$CLZ$$ instruction returns $$11$$
+... CLZ instruction returns 11
 
-Then, we calculate the locaction of the left-most non zero bit as:
+Then, we calculate the locaction of the left-most non zero bit as: ``31 - CLZ(x)``
 
-$$31 - CLZ(x)$$
-
-Which is equal to the $$N$$ in the highest $$2^N$$ value smaller or equal to input $$x$$
+Which is equal to the N in the highest 2<sup>N</sup> value smaller or equal to input x
 
 ## Core Algorithm
 
@@ -71,7 +69,7 @@ int32_t log2_fast(uint32_t x)
 
 ## Error analysis
 
-![test](./doc/error_analysis.png)
+![](./doc/error_analysis.png)
 
 * In this particular example, 1024 length lookup table is used.
 * Size of the lookup table can be increased for reduced error performance. Or, table can be read with linear interpolation for reduced error performance.

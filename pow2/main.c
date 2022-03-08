@@ -33,9 +33,36 @@ static inline uint32_t pow2_reference(const uint32_t x)
 }
 
 // ----------------------------------------------------------------------------
+static inline uint32_t lutRead_interp(const uint32_t value)
+{
+  // ...
+  uint32_t ind = value >> 6;
+  uint32_t ind_frac = value - (ind << 6);
+  uint32_t ratio_6b = ind_frac;
+
+  // ...
+  uint32_t y0 = lut_pow2[(ind + 0)];
+  uint32_t y1 = lut_pow2[(ind + 1)];
+  int64_t diff = y1 - y0;
+  
+  // ...
+  return (y0 + ((diff * ratio_6b) >> 6));
+}
+
+// ----------------------------------------------------------------------------
 static inline uint32_t lutRead(const uint32_t value)
 {
   return lut_pow2[value >> 6];
+}
+
+// ----------------------------------------------------------------------------
+static inline uint32_t pow2_fast_interp(const uint32_t x)
+{
+  // ...
+  uint32_t N = x >> 16;
+  uint32_t remainder = x & 0x0000FFFF;
+  uint64_t scale = lutRead_interp(remainder);  
+  return (uint32_t)((scale << N) >> 16);
 }
 
 // ----------------------------------------------------------------------------
@@ -43,10 +70,9 @@ static inline uint32_t pow2_fast(const uint32_t x)
 {
   // ...
   uint32_t N = x >> 16;
-  uint32_t base = (1 << N);
   uint32_t remainder = x & 0x0000FFFF;
-  uint32_t scale = lutRead(remainder);
-  return ((uint64_t)base * scale) >> 16;;
+  uint64_t scale = lutRead(remainder);  
+  return (uint32_t)((scale << N) >> 16);
 }
 
 // ----------------------------------------------------------------------------
@@ -66,7 +92,9 @@ int main()
   // ...
   for(uint32_t x=start;x<end;x+=step)
   {
-    fprintf(fp, "%u,%u,%u\r\n", x, pow2_fast(x), pow2_reference(x));
+    fprintf(fp, "%u,%u,%u,%u\r\n", 
+      x, pow2_fast(x), pow2_fast_interp(x), pow2_reference(x)
+    );
   }
 
   // ...

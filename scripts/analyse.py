@@ -35,7 +35,7 @@ log2_fast_interp = dat[:,2]
 log2_ref = dat[:,3]
 
 # ...
-plt.figure(figsize=(16, 9))
+plt.figure(figsize=(8, 5))
 plt.subplot(2,1,1)
 plt.title("(int32_t)(log2f(x) * 65536.0)")
 plt.xlabel("Input", fontsize=10)

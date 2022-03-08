@@ -90,9 +90,9 @@ static inline int32_t log2_fast(const uint32_t x)
 // ----------------------------------------------------------------------------
 int main()
 {
-  const int32_t start = 10;
-  const int32_t end = (1UL << 31) - 16384;
-  const int32_t step = 10;
+  const uint32_t start = 10;
+  const uint32_t end = (1UL << 32) - 16384;
+  const uint32_t step = 10;
 
   // ...
   FILE* fp = fopen("./doc/results.txt", "w+");
@@ -104,7 +104,7 @@ int main()
   // ...
   int32_t max_err = 0;
   int32_t max_err_interp = 0;
-  for(int32_t x=start;x<end;x+=step)
+  for(uint32_t x=start;x<end;x+=step)
   {
     // ...
     int32_t err = abs(log2_fast(x) - log2_reference(x));
@@ -123,7 +123,7 @@ int main()
     // ...
     if((x % 1000) == 0)
     {
-      fprintf(fp, "%d,%d,%d,%d\r\n", 
+      fprintf(fp, "%u,%u,%u,%u\r\n", 
         x, log2_fast(x), log2_fast_interp(x), log2_reference(x)
       );
     }    

@@ -30,12 +30,12 @@ dat = iter_loadtxt(sys.argv[1])
 
 # ...
 x = dat[:,0]
-log2_fast = dat[:,1]
-log2_fast_interp = dat[:,2]
-log2_ref = dat[:,3]
+pow2_fast = dat[:,1]
+pow2_fast_interp = dat[:,2]
+pow2_ref = dat[:,3]
 
 # ...
-relative_err = (log2_ref - log2_fast) / log2_ref
+relative_err = (pow2_ref - pow2_fast) / pow2_ref
 print("[Relative Error] mean: %f stddev: %f variance: %f" % (
   np.mean(relative_err), 
   np.std(relative_err), 
@@ -43,7 +43,7 @@ print("[Relative Error] mean: %f stddev: %f variance: %f" % (
 ))
 
 # ...
-relative_err_interp = (log2_ref - log2_fast_interp) / log2_ref
+relative_err_interp = (pow2_ref - pow2_fast_interp) / pow2_ref
 print("[Relative Error] mean: %f stddev: %f variance: %f (Interpolated)" % (
   np.mean(relative_err_interp), 
   np.std(relative_err_interp), 
@@ -56,17 +56,17 @@ plt.subplot(3,1,1)
 plt.title("(uint32_t)(powf(2.0, (float)x / 65536.0))")
 plt.xlabel("Input", fontsize=10)
 plt.ylabel("Output", fontsize=10)
-plt.plot(x, log2_ref, label="reference")
-plt.plot(x, log2_fast, "r", label="fast")
-plt.plot(x, log2_fast_interp, "k",  label="fast_interp")
+plt.plot(x, pow2_ref, label="reference")
+plt.plot(x, pow2_fast, "r", label="fast")
+plt.plot(x, pow2_fast_interp, "k",  label="fast_interp")
 plt.legend()
 plt.tight_layout()
 plt.subplot(3,1,2)
 plt.title("Approximation Error (Absolute)")
 plt.xlabel("Input", fontsize=10)
 plt.ylabel("Error", fontsize=10)
-plt.plot(x, log2_ref - log2_fast, label="fast")
-plt.plot(x, log2_ref - log2_fast_interp, "k", label="fast_interp")
+plt.plot(x, pow2_ref - pow2_fast, label="fast")
+plt.plot(x, pow2_ref - pow2_fast_interp, "k", label="fast_interp")
 plt.legend()
 plt.tight_layout()
 plt.subplot(3,1,3)
